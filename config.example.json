@@ -1,0 +1,122 @@
+{
+  "access_password": "YOUR_SECURE_ACCESS_PASSWORD_HERE",
+  "model": {
+    "name": "your-model-name",
+    "provider": "your-provider-name",
+    "api_base": "https://your-api-endpoint.com/v1",
+    "api_key": "YOUR_API_KEY_HERE",
+    "api_key_env": "MODEL_API_KEY",
+    "precision": "待确认",
+    "max_context": 131072,
+    "max_output": 8192,
+    "thinking": {
+      "type": "disabled"
+    }
+  },
+  "benchmarks": {
+    "AIME2025": {
+      "official": 95.3,
+      "tolerance": 4.0,
+      "category": "通用推理能力"
+    },
+    "HLE": {
+      "official": 52.3,
+      "tolerance": 4.0,
+      "category": "通用推理能力"
+    },
+    "SWE-Bench_Verified": {
+      "official": 58.4,
+      "tolerance": 4.0,
+      "category": "编码能力"
+    },
+    "GPQA": {
+      "official": 86.2,
+      "tolerance": 4.0,
+      "category": "通用推理能力"
+    },
+    "LongBench_V2": {
+      "official": null,
+      "tolerance": 4.0,
+      "category": "长上下文理解能力"
+    },
+    "TAU_retail": {
+      "official": 70.6,
+      "tolerance": 4.0,
+      "category": "Agent工具调用"
+    },
+    "TAU_telecom": {
+      "official": 70.6,
+      "tolerance": 4.0,
+      "category": "Agent工具调用"
+    },
+    "TAU_airline": {
+      "official": 70.6,
+      "tolerance": 4.0,
+      "category": "Agent工具调用"
+    }
+  },
+  "performance": {
+    "ttft_sla": {
+      "<6K": {
+        "p90": 5,
+        "p50": 2,
+        "avg": 2,
+        "max_concurrency": 12
+      },
+      "6-16K": {
+        "p90": 5,
+        "p50": 2.5,
+        "avg": 4,
+        "max_concurrency": 10
+      },
+      "16-32K": {
+        "p90": 8,
+        "p50": 4,
+        "avg": 6,
+        "max_concurrency": 8
+      },
+      "32-64K": {
+        "p90": 15,
+        "p50": 8,
+        "avg": 8,
+        "max_concurrency": 6
+      },
+      "64-128K": {
+        "p90": 35,
+        "p50": 15,
+        "avg": 15,
+        "max_concurrency": 4
+      },
+      "128-256K": {
+        "p90": 70,
+        "p50": 30,
+        "avg": 30,
+        "max_concurrency": 3
+      }
+    },
+    "otps": {
+      "L1": {
+        "min": 30,
+        "unit": "tokens/s"
+      },
+      "L2": {
+        "min": 10,
+        "unit": "tokens/s"
+      }
+    }
+  },
+  "capacity": {
+    "tpm": 50000000,
+    "rpm": 1000,
+    "rpm_concurrency_vu": 30,
+    "rpm_duration_seconds": 20,
+    "max_tokens": 200000
+  },
+  "availability": {
+    "sla_monthly": 99.9,
+    "rto_peak": 10,
+    "rto_offpeak": 60,
+    "unavailable_threshold": 0.1,
+    "unavailable_window_min": 10
+  }
+}

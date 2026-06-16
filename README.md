@@ -52,9 +52,13 @@ pip3 install -r requirements.txt
 ```
 
 ### 3. 配置系统属性
-在启动之前，您需要创建或修改项目根目录下的 `config.json` 配置文件。
+在启动之前，您需要将根目录下的模板配置文件复制为 `config.json`，然后再进行修改：
+```bash
+cp config.example.json config.json
+```
+然后编辑 `config.json` 写入您的具体凭证。
 
-**`config.json` 模板如下：**
+**配置文件结构示范如下：**
 ```json
 {
   "access_password": "您的安全访问密码（若留空则不启用密码锁）",
