@@ -8,9 +8,23 @@ logger = logging.getLogger(__name__)
 from evalscope import TaskConfig, run_task
 from evalscope.constants import EvalType
 
-MODEL = "qwen3.7-max"
-API_URL = "https://dashscope.aliyuncs.com/compatible-mode/v1"
-API_KEY = "YOUR_API_KEY_HERE"
+from pathlib import Path
+SCRIPT_DIR = Path(__file__).parent if '__file__' in locals() else Path('.')
+PROJECT_DIR = SCRIPT_DIR.parent
+CONFIG_PATH = PROJECT_DIR / 'config.json'
+
+def load_config():
+    if CONFIG_PATH.exists():
+        with open(CONFIG_PATH, 'r', encoding='utf-8') as f:
+            return json.load(f)
+    return {}
+
+config = load_config()
+model_config = config.get('model', {})
+
+MODEL = model_config.get('name', 'qwen3.7-max')
+API_URL = model_config.get('api_base', 'https://dashscope.aliyuncs.com/compatible-mode/v1')
+API_KEY = model_config.get('api_key', '')
 
 
 def run():
