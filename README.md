@@ -31,6 +31,8 @@
   - `Flask` (Web 框架)
   - `Flask-CORS` (解决跨域开发问题)
   - `urllib3` (用于后台进行 API 联通性测试)
+- **虚拟化环境（可选）**：
+  - **Docker**：如果需要执行代码精度评测（特别是 **SWE-bench** 系列测试），服务器必须已安装并运行 Docker 守护进程（Daemon）。底层评测引擎（基于 `evalscope` / `SWE-bench` Harness）会自动调用 Docker API 创建沙箱容器，拉取测试环境镜像，并在容器内对目标开源软件仓库应用补丁并运行集成测试。如果您只执行 API 吞吐性能测试 (TTFT/OTPS) 或基础可用性校验，则无需安装 Docker。
 
 ---
 
