@@ -1,0 +1,67 @@
+[
+  {
+    "id": "tau_telecom_001",
+    "scenario": "telecom",
+    "user_message": "I want to upgrade my plan to the premium data package. My account number is TC-78901.",
+    "available_tools": [
+      {"name": "get_account_info", "params": {"account_id": "string"}},
+      {"name": "list_plans", "params": {"category": "string"}},
+      {"name": "change_plan", "params": {"account_id": "string", "plan_id": "string"}}
+    ],
+    "expected_tool_call": "get_account_info",
+    "expected_tool_args": {"account_id": "TC-78901"},
+    "category": "tool_use"
+  },
+  {
+    "id": "tau_telecom_002",
+    "scenario": "telecom",
+    "user_message": "My internet has been slow all week. Can you run a diagnostic on my line?",
+    "available_tools": [
+      {"name": "run_diagnostics", "params": {"account_id": "string"}},
+      {"name": "schedule_technician", "params": {"account_id": "string", "date": "string"}},
+      {"name": "check_outages", "params": {"region": "string"}}
+    ],
+    "expected_tool_call": "run_diagnostics",
+    "expected_tool_args": {},
+    "category": "tool_use"
+  },
+  {
+    "id": "tau_telecom_003",
+    "scenario": "telecom",
+    "user_message": "Check my current bill and explain the international roaming charges from last month",
+    "available_tools": [
+      {"name": "get_bill", "params": {"account_id": "string", "month": "string"}},
+      {"name": "get_call_records", "params": {"account_id": "string", "month": "string"}},
+      {"name": "explain_charges", "params": {"bill_id": "string"}}
+    ],
+    "expected_tool_call": "get_bill",
+    "expected_tool_args": {"month": "last"},
+    "category": "multi_tool"
+  },
+  {
+    "id": "tau_telecom_004",
+    "scenario": "telecom",
+    "user_message": "Port my phone number to another carrier. I need the unlock code",
+    "available_tools": [
+      {"name": "get_port_code", "params": {"account_id": "string", "phone_number": "string"}},
+      {"name": "unlock_device", "params": {"device_id": "string"}},
+      {"name": "verify_identity", "params": {"account_id": "string"}}
+    ],
+    "expected_tool_call": "verify_identity",
+    "expected_tool_args": {},
+    "category": "multi_tool"
+  },
+  {
+    "id": "tau_telecom_005",
+    "scenario": "telecom",
+    "user_message": "Add a family member to my shared plan and set up parental controls for their line",
+    "available_tools": [
+      {"name": "add_line", "params": {"account_id": "string", "name": "string"}},
+      {"name": "set_parental_controls", "params": {"line_id": "string", "restrictions": "object"}},
+      {"name": "get_shared_plan", "params": {"account_id": "string"}}
+    ],
+    "expected_tool_call": "get_shared_plan",
+    "expected_tool_args": {},
+    "category": "multi_tool"
+  }
+]

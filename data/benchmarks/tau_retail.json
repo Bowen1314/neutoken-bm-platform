@@ -1,0 +1,65 @@
+[
+  {
+    "id": "tau_retail_001",
+    "scenario": "retail",
+    "user_message": "I want to return the shoes I bought last week. Order #RT-29481.",
+    "available_tools": [
+      {"name": "lookup_order", "params": {"order_id": "string"}},
+      {"name": "initiate_return", "params": {"order_id": "string", "reason": "string"}},
+      {"name": "check_return_policy", "params": {"order_id": "string"}}
+    ],
+    "expected_tool_call": "lookup_order",
+    "expected_tool_args": {"order_id": "RT-29481"},
+    "category": "tool_use"
+  },
+  {
+    "id": "tau_retail_002",
+    "scenario": "retail",
+    "user_message": "Can you check if item SKU-88412 is in stock at the downtown store?",
+    "available_tools": [
+      {"name": "check_inventory", "params": {"sku": "string", "store": "string"}},
+      {"name": "search_products", "params": {"query": "string"}}
+    ],
+    "expected_tool_call": "check_inventory",
+    "expected_tool_args": {"sku": "SKU-88412", "store": "downtown"},
+    "category": "tool_use"
+  },
+  {
+    "id": "tau_retail_003",
+    "scenario": "retail",
+    "user_message": "Apply my loyalty points to this purchase and apply any available discounts",
+    "available_tools": [
+      {"name": "get_loyalty_balance", "params": {"customer_id": "string"}},
+      {"name": "apply_loyalty_points", "params": {"order_id": "string", "points": "number"}},
+      {"name": "find_discounts", "params": {"items": "array"}}
+    ],
+    "expected_tool_call": "get_loyalty_balance",
+    "expected_tool_args": {},
+    "category": "multi_tool"
+  },
+  {
+    "id": "tau_retail_004",
+    "scenario": "retail",
+    "user_message": "I need to cancel my subscription and get a refund for the unused months",
+    "available_tools": [
+      {"name": "get_subscription", "params": {"customer_id": "string"}},
+      {"name": "cancel_subscription", "params": {"subscription_id": "string"}},
+      {"name": "process_refund", "params": {"order_id": "string", "amount": "number"}}
+    ],
+    "expected_tool_call": "get_subscription",
+    "expected_tool_args": {},
+    "category": "multi_tool"
+  },
+  {
+    "id": "tau_retail_005",
+    "scenario": "retail",
+    "user_message": "Track my package for order #RT-55123 and tell me the estimated delivery date",
+    "available_tools": [
+      {"name": "track_package", "params": {"order_id": "string"}},
+      {"name": "lookup_order", "params": {"order_id": "string"}}
+    ],
+    "expected_tool_call": "track_package",
+    "expected_tool_args": {"order_id": "RT-55123"},
+    "category": "tool_use"
+  }
+]

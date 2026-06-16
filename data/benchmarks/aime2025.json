@@ -1,0 +1,38 @@
+[
+  {
+    "id": "aime25_001",
+    "question": "Find the number of ordered triples $(a, b, c)$ of positive integers such that $ab + bc + ac = a + b + c + 1000$.",
+    "answer": "8",
+    "category": "algebra"
+  },
+  {
+    "id": "aime25_002",
+    "question": "Let $S$ be the set of all positive integers $n$ such that $n^2$ is a multiple of both 24 and 108. Which of the following integers are in $S$? I. 12, II. 24, III. 36, IV. 72. Find |S ∩ {1,2,...,100}|.",
+    "answer": "16",
+    "category": "number_theory"
+  },
+  {
+    "id": "aime25_003",
+    "question": "A circle is inscribed in a right triangle with legs of length 6 and 8. What is the radius of the inscribed circle? Express your answer as a fraction in lowest terms and give the numerator + denominator.",
+    "answer": "5",
+    "category": "geometry"
+  },
+  {
+    "id": "aime25_004",
+    "question": "Find the sum of all positive integers $n$ such that $\\frac{n+1000}{n}$ is an integer and $\\frac{n+1000}{n}$ is a perfect square.",
+    "answer": "2480",
+    "category": "number_theory"
+  },
+  {
+    "id": "aime25_005",
+    "question": "In how many ways can 8 indistinguishable balls be placed into 3 distinguishable boxes such that no box is empty and no box contains more than 4 balls?",
+    "answer": "3",
+    "category": "combinatorics"
+  },
+  {
+    "id": "aime25_006",
+    "question": "Let $f(x) = x^3 - 3x + 1$. Find the sum of all real roots of $f(f(x)) = 0$.",
+    "answer": "0",
+    "category": "algebra"
+  }
+]

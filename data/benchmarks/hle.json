@@ -1,0 +1,38 @@
+[
+  {
+    "id": "hle_001",
+    "question": "What is the computational complexity of finding a Nash equilibrium in a two-player general-sum game? Give the complexity class.",
+    "answer": "PPAD-complete",
+    "category": "computer_science"
+  },
+  {
+    "id": "hle_002",
+    "question": "In quantum computing, what is the minimum number of T-gates required to approximate a single-qubit rotation to precision epsilon, according to the Solovay-Kitaev theorem improvement?",
+    "answer": "O(log(1/epsilon))",
+    "category": "quantum_computing"
+  },
+  {
+    "id": "hle_003",
+    "question": "What is the Hausdorff dimension of the boundary of the Mandelbrot set?",
+    "answer": "2",
+    "category": "mathematics"
+  },
+  {
+    "id": "hle_004",
+    "question": "State the strongest known upper bound on the number of twin primes less than x.",
+    "answer": "O(x/(log x)^2)",
+    "category": "number_theory"
+  },
+  {
+    "id": "hle_005",
+    "question": "What is the exact value of the Ramsey number R(4,4)?",
+    "answer": "18",
+    "category": "combinatorics"
+  },
+  {
+    "id": "hle_006",
+    "question": "In the Standard Model of particle physics, what is the measured value of the Higgs boson mass in GeV to the nearest integer?",
+    "answer": "125",
+    "category": "physics"
+  }
+]

@@ -1,0 +1,16 @@
+# Ignore configuration with secrets
+config.json
+config_remote.json
+
+# Ignore local files
+.DS_Store
+*.pyc
+__pycache__/
+
+# Ignore runtime data, logs, and outputs to avoid leaking API keys in configs/yaml dumps
+results/
+outputs/
+logs/
+*.log
+*.bak*
+*.old

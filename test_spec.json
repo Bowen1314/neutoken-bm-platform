@@ -1,0 +1,464 @@
+{
+  "test_suites": [
+    {
+      "id": "eng",
+      "name": "工程验收 (Interface)",
+      "parallel": true,
+      "tests": [
+        {
+          "id": "eng_thinking_ctl",
+          "name": "Thinking控制",
+          "parallel": true,
+          "type": "api_call",
+          "desc": "thinking enabled/disabled/default 三种模式 + reasoning_content 长度验证"
+        },
+        {
+          "id": "eng_param_defaults",
+          "name": "参数默认值一致性",
+          "parallel": true,
+          "type": "api_call",
+          "desc": "6项约束: n固定为1/top_p固定0.95/presence_penalty固定0.0/temperature(Thinking)固定1.0/temperature(Non-Thinking)固定0.6/标准参数验证通过"
+        },
+        {
+          "id": "eng_max_tokens_default",
+          "name": "max_tokens默认值与边界",
+          "parallel": true,
+          "type": "api_call",
+          "desc": "流式探测输出上限: print 1到100000任务, 验证实际生成token数在8000~70000且finish_reason为length/stop"
+        },
+        {
+          "id": "eng_no_sys_prompt",
+          "name": "无默认System Prompt",
+          "parallel": true,
+          "type": "api_call",
+          "desc": "供应商默认不添加任何System Prompt"
+        },
+        {
+          "id": "eng_interleaved_thinking",
+          "name": "Interleaved Thinking回传",
+          "parallel": true,
+          "type": "api_call",
+          "desc": "thinking=enabled + tool call 3阶段验证：回传→正常/缺reasoning→400(Kimi官方)或200(代理不强制)"
+        },
+        {
+          "id": "eng_eos_suppress",
+          "name": "EOS抑制机制",
+          "parallel": false,
+          "type": "load_test",
+          "desc": "1000次请求统计 finish_reason 分布 + 空content比例（<1%通过） + error比例（<1%通过）"
+        },
+        {
+          "id": "eng_whitelist",
+          "name": "免审核白名单（绿网关闭）",
+          "parallel": true,
+          "type": "api_call",
+          "desc": "2项硬性：敏感内容无header被拦截/有X-Content-Filter头绕过"
+        },
+        {
+          "id": "eng_tpm_guarantee",
+          "name": "TPM保障包",
+          "parallel": false,
+          "type": "load_test",
+          "desc": "5并发2波TPM吞吐验证，零限流零错误"
+        },
+        {
+          "id": "eng_rate_limit",
+          "name": "频控容忍",
+          "parallel": false,
+          "type": "load_test",
+          "desc": "RPM/TPM/并发限流规则验证"
+        },
+        {
+          "id": "eng_chunk_usage",
+          "name": "Chunk累计Token用量",
+          "parallel": true,
+          "type": "streaming",
+          "desc": "流式输出中返回累计token用量"
+        },
+        {
+          "id": "eng_cache",
+          "name": "Cache能力",
+          "parallel": true,
+          "type": "api_call",
+          "desc": "5项：隐式缓存(5次重复)/显式cache_control/缓存TTL(30s)/缓存粒度(前缀修改)/成本优惠(prompt_tokens对比)"
+        },
+        {
+          "id": "eng_structured_output",
+          "name": "结构化输出",
+          "parallel": true,
+          "type": "api_call",
+          "desc": "6项：json_object合规/json_schema完整schema/enum约束/不含json关键词→400/格式违规率10次统计/无效schema错误处理"
+        },
+        {
+          "id": "eng_function_calling",
+          "name": "Function Calling",
+          "parallel": true,
+          "type": "api_call",
+          "desc": "8项：tools格式/functions兼容/并行调用/多轮上下文/追问tool结果/二次推理/finish_reason/不误触发"
+        },
+        {
+          "id": "eng_multi_turn",
+          "name": "多轮对话",
+          "parallel": true,
+          "type": "api_call",
+          "desc": "4项：3轮上下文回忆/token计费对比/5轮增量多轮/上下文窗口梯度探测"
+        },
+        {
+          "id": "eng_streaming",
+          "name": "流式输出SSE",
+          "parallel": true,
+          "type": "streaming",
+          "desc": "5项：SSE协议/chunk传输/结束信号/chunk粒度分析/断流重连（仅前2项决定通过）"
+        },
+        {
+          "id": "eng_version_mgmt",
+          "name": "模型版本管理",
+          "parallel": true,
+          "type": "api_call",
+          "desc": "模型名称验证: 提取chat completion响应中model字段 + 查询/models端点获取可用模型列表"
+        },
+        {
+          "id": "eng_api_messages",
+          "name": "messages",
+          "parallel": true,
+          "type": "api_call",
+          "desc": "9项:正常结构/缺少role/缺少content/空messages/无效role/content=null/额外字段容错/system+user/assistant+user"
+        },
+        {
+          "id": "eng_api_messages_elements",
+          "name": "messages-元素",
+          "parallel": true,
+          "type": "api_call",
+          "desc": "4项:content=空字符串/content=数字/content=对象/messages数组含非对象元素"
+        },
+        {
+          "id": "eng_api_top_p",
+          "name": "top_p 类型float",
+          "parallel": true,
+          "type": "api_call",
+          "desc": "7硬:默认0.95/0.5/1.0/0.0/越界1.1/越界-0.01/string, 任一失败=FAIL"
+        },
+        {
+          "id": "eng_api_temperature",
+          "name": "temperature",
+          "parallel": true,
+          "type": "api_call",
+          "desc": "7硬:默认1.0/0.0/0.6/1.5/越界2.1/越界-0.1/string, 任一失败=FAIL"
+        },
+        {
+          "id": "eng_api_freq_penalty",
+          "name": "frequency_penalty",
+          "parallel": true,
+          "type": "api_call",
+          "desc": "8硬:默认0.0/0.5/1.0/-1.0/越界2.1/-2.1/string/bool, 任一失败=FAIL"
+        },
+        {
+          "id": "eng_api_pres_penalty",
+          "name": "presence_penalty",
+          "parallel": true,
+          "type": "api_call",
+          "desc": "7硬:默认0.0/1.0/2.0/-2.0/越界2.1/-2.1/string, 任一失败=FAIL"
+        },
+        {
+          "id": "eng_api_max_tokens",
+          "name": "max_tokens",
+          "parallel": true,
+          "type": "api_call",
+          "desc": "4硬+3记录: mt=0/-1/-5/32768硬性 | max_completion_tokens/n=2/n=3仅记录"
+        },
+        {
+          "id": "eng_api_input_length",
+          "name": "输入长度-云API",
+          "parallel": true,
+          "type": "api_call",
+          "desc": "7硬: 2K/50K/128K/255K→200 | 越界270K/350K→400(Kimi)/200~400(Qwen) | 截断策略→200, 任一失败=FAIL"
+        },
+        {
+          "id": "eng_api_input_length_nonstream",
+          "name": "输入长度-非流式输出",
+          "parallel": true,
+          "type": "api_call",
+          "desc": "非流式模式下超长输入(~16K tokens)的响应完整性验证"
+        },
+        {
+          "id": "eng_api_stream",
+          "name": "stream",
+          "parallel": true,
+          "type": "api_call",
+          "desc": "流式SSE chunks验证"
+        },
+        {
+          "id": "eng_api_stop",
+          "name": "stop",
+          "parallel": true,
+          "type": "api_call",
+          "desc": "5项:单字符串/多词/特殊字符/空数组/类型错误"
+        },
+        {
+          "id": "eng_api_json_object",
+          "name": "json_object",
+          "parallel": true,
+          "type": "api_call",
+          "desc": "json_object合规验证+不含json关键词→400"
+        },
+        {
+          "id": "eng_api_web_search",
+          "name": "联网搜索",
+          "parallel": true,
+          "type": "api_call",
+          "desc": "web_search/enable_search/search三种参数"
+        },
+        {
+          "id": "eng_api_auth",
+          "name": "鉴权与安全",
+          "parallel": true,
+          "type": "api_call",
+          "desc": "6项: 无效key→401/无Authorization→401/空Auth→401/Basic格式→401/过期token→401/暴力枚举10次连续拒绝"
+        },
+        {
+          "id": "eng_api_encoding",
+          "name": "编码与特殊字符",
+          "parallel": true,
+          "type": "api_call",
+          "desc": "6项: 中文/日文/emoji/控制字符(\\n\\t\\0)/超长Unicode(ZWJ)/UTF-8 BOM处理"
+        },
+        {
+          "id": "eng_api_system_prompt",
+          "name": "system prompt 行为",
+          "parallel": true,
+          "type": "api_call",
+          "desc": "7项硬性: 角色约束/超长system/DAN注入/Base64注入/分隔符注入 | 仅记录: 多system互补/冲突"
+        },
+        {
+          "id": "eng_api_multimodal",
+          "name": "多模态输入",
+          "parallel": true,
+          "type": "api_call",
+          "desc": "4项硬性: image_url/image_base64/文本图片混合/多图, 全部返回200才通过(纯文本模型返回400=FAIL)"
+        },
+        {
+          "id": "eng_idempotency",
+          "name": "幂等性验证",
+          "parallel": true,
+          "type": "api_call",
+          "desc": "seed=42+temp=1.0重复5次非流式3次流式验证输出一致性 + seed边界值(0/-1/max_int32) + seed类型兼容(int/float/string) + 无seed输出变化验证"
+        },
+        {
+          "id": "eng_badcase",
+          "name": "线上Badcase回归",
+          "parallel": true,
+          "type": "api_call",
+          "desc": "8项K2.5→K2.6回归: Tool call/429限流/max_tokens参数/多轮超时/Token计费/空输出/长上下文压缩/Function call finish_reason"
+        },
+        {
+          "id": "eng_long_output",
+          "name": "超长输出截断",
+          "parallel": true,
+          "type": "api_call",
+          "desc": "5项全部仅记录(直接通过): finish_length/finish_stop/max_tokens=0/中文截断/代码截断"
+        }
+      ]
+    },
+    {
+      "id": "accuracy",
+      "name": "精度验收 (Accuracy)",
+      "parallel": true,
+      "tests": [
+        {
+          "id": "acc_aime25",
+          "name": "AIME2025",
+          "parallel": true,
+          "type": "benchmark",
+          "desc": "30题 竞赛数学 EvalScope全量评测",
+          "official": 95.3,
+          "tolerance": 4.0
+        },
+        {
+          "id": "acc_aime26",
+          "name": "AIME2026",
+          "parallel": true,
+          "type": "benchmark",
+          "desc": "30题 竞赛数学 EvalScope全量评测",
+          "official": null,
+          "tolerance": 4.0
+        },
+        {
+          "id": "acc_hle",
+          "name": "HLE",
+          "parallel": true,
+          "type": "benchmark",
+          "desc": "2500题 全学科 EvalScope全量评测 含多模态",
+          "official": 52.3,
+          "tolerance": 4.0
+        },
+        {
+          "id": "acc_swebench",
+          "name": "SWE-Bench Verified",
+          "parallel": true,
+          "type": "benchmark",
+          "desc": "500题 Docker真实执行 需WSL环境",
+          "official": 58.4,
+          "tolerance": 4.0
+        },
+        {
+          "id": "acc_gpqa",
+          "name": "GPQA Diamond",
+          "parallel": true,
+          "type": "benchmark",
+          "desc": "198题 研究生级科学问答 EvalScope全量评测",
+          "official": 86.2,
+          "tolerance": 4.0
+        },
+        {
+          "id": "acc_longbench",
+          "name": "LongBench V2",
+          "parallel": true,
+          "type": "benchmark",
+          "desc": "503题 长上下文理解 EvalScope全量评测",
+          "official": null,
+          "tolerance": 4.0
+        },
+        {
+          "id": "acc_tau_retail",
+          "name": "TAU Bench 零售",
+          "parallel": true,
+          "type": "benchmark",
+          "desc": "Agent环境 需agent依赖",
+          "official": 70.6,
+          "tolerance": 4.0
+        },
+        {
+          "id": "acc_tau_telecom",
+          "name": "TAU Bench 电力",
+          "parallel": true,
+          "type": "benchmark",
+          "desc": "Agent环境 需agent依赖",
+          "official": 70.6,
+          "tolerance": 4.0
+        },
+        {
+          "id": "acc_tau_airline",
+          "name": "TAU Bench 航空",
+          "parallel": true,
+          "type": "benchmark",
+          "desc": "Agent环境 需agent依赖",
+          "official": 70.6,
+          "tolerance": 4.0
+        }
+      ]
+    },
+    {
+      "id": "perf",
+      "name": "性能验收 (Performance)",
+      "parallel": false,
+      "tests": [
+        {
+          "id": "perf_ttft_6k",
+          "name": "TTFT <6K tokens",
+          "parallel": false,
+          "type": "perf",
+          "desc": "P90<5s P50<2s avg<2s",
+          "max_concurrency": 12
+        },
+        {
+          "id": "perf_ttft_16k",
+          "name": "TTFT 6-16K tokens",
+          "parallel": false,
+          "type": "perf",
+          "desc": "P90<5s P50<2.5s avg<4s",
+          "max_concurrency": 10
+        },
+        {
+          "id": "perf_ttft_32k",
+          "name": "TTFT 16-32K tokens",
+          "parallel": false,
+          "type": "perf",
+          "desc": "P90<8s P50<4s avg<6s",
+          "max_concurrency": 8
+        },
+        {
+          "id": "perf_ttft_64k",
+          "name": "TTFT 32-64K tokens",
+          "parallel": false,
+          "type": "perf",
+          "desc": "P90<15s P50<8s avg<8s",
+          "max_concurrency": 6
+        },
+        {
+          "id": "perf_ttft_128k",
+          "name": "TTFT 64-128K tokens",
+          "parallel": false,
+          "type": "perf",
+          "desc": "P90<35s P50<15s avg<15s",
+          "max_concurrency": 4
+        },
+        {
+          "id": "perf_ttft_256k",
+          "name": "TTFT 128-256K tokens",
+          "parallel": false,
+          "type": "perf",
+          "desc": "P90<70s P50<30s avg<30s",
+          "max_concurrency": 3
+        },
+        {
+          "id": "perf_otps_l1",
+          "name": "OTPS L1 (≥30 tok/s)",
+          "parallel": false,
+          "type": "perf",
+          "desc": "请求成功率>99%时OTPS≥30"
+        },
+        {
+          "id": "perf_otps_l2",
+          "name": "OTPS L2 (≥10 tok/s)",
+          "parallel": false,
+          "type": "perf",
+          "desc": "请求成功率>99%时OTPS≥10"
+        }
+      ]
+    },
+    {
+      "id": "hallucination",
+      "name": "幻觉测试 (Hallucination)",
+      "parallel": true,
+      "tests": [
+        {
+          "id": "hall_simpleqa",
+          "name": "SimpleQA",
+          "parallel": true,
+          "type": "benchmark",
+          "desc": "模型幻觉率测试",
+          "official": null,
+          "tolerance": 4.0
+        }
+      ]
+    },
+    {
+      "id": "capacity",
+      "name": "容量及稳定性 (Capacity)",
+      "parallel": false,
+      "tests": [
+        {
+          "id": "cap_tpm",
+          "name": "TPM容量",
+          "parallel": false,
+          "type": "load_test",
+          "desc": "5000万TPM容量验证"
+        },
+        {
+          "id": "cap_rpm",
+          "name": "RPM限流",
+          "parallel": false,
+          "type": "load_test",
+          "desc": "500 RPM超出后429响应<200ms"
+        },
+        {
+          "id": "cap_max_tokens",
+          "name": "max_tokens 200K",
+          "parallel": false,
+          "type": "load_test",
+          "desc": "200K上下文正常处理"
+        }
+      ]
+    }
+  ]
+}

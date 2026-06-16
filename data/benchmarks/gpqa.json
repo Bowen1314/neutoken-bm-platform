@@ -1,0 +1,74 @@
+[
+  {
+    "id": "gpqa_001",
+    "question": "In the context of the AdS/CFT correspondence, what is the Ryu-Takayanagi formula for the entanglement entropy of a boundary region A?",
+    "choices": [
+      "S_A = Area(minimal surface homologous to A) / (4G_N)",
+      "S_A = Volume(maximal slice) / (4G_N)",
+      "S_A = Area(A) / (4G_N)",
+      "S_A = Length(geodesic through A) / (4G_N)"
+    ],
+    "answer": "A",
+    "category": "physics"
+  },
+  {
+    "id": "gpqa_002",
+    "question": "What is the time complexity of the best known algorithm for computing the determinant of an n×n matrix over a finite field GF(p)?",
+    "choices": [
+      "O(n^2.373)",
+      "O(n^3)",
+      "O(n^2 log n)",
+      "O(n^2.807)"
+    ],
+    "answer": "A",
+    "category": "computer_science"
+  },
+  {
+    "id": "gpqa_003",
+    "question": "In the proof of Fermat's Last Theorem, what key property of elliptic curves did Wiles establish to prove the Taniyama-Shimura conjecture for semistable curves?",
+    "choices": [
+      "Every semistable elliptic curve over Q is modular",
+      "Every elliptic curve has a rational point",
+      "The rank of every elliptic curve is finite",
+      "The torsion subgroup is bounded"
+    ],
+    "answer": "A",
+    "category": "mathematics"
+  },
+  {
+    "id": "gpqa_004",
+    "question": "What is the predicted decay rate of the proton in minimal SU(5) Grand Unified Theory?",
+    "choices": [
+      "~10^31 years (already ruled out)",
+      "~10^34 years",
+      "~10^40 years",
+      "~10^28 years"
+    ],
+    "answer": "A",
+    "category": "physics"
+  },
+  {
+    "id": "gpqa_005",
+    "question": "In the study of protein folding, what is the Levinthal paradox primarily about?",
+    "choices": [
+      "Proteins fold faster than would be expected from random search of conformational space",
+      "Proteins cannot fold without chaperones",
+      "Protein folding is NP-hard",
+      "All proteins fold into alpha helices"
+    ],
+    "answer": "A",
+    "category": "biology"
+  },
+  {
+    "id": "gpqa_006",
+    "question": "What is the critical dimension of bosonic string theory?",
+    "choices": [
+      "26",
+      "10",
+      "11",
+      "4"
+    ],
+    "answer": "A",
+    "category": "physics"
+  }
+]

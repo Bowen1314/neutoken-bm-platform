@@ -1,0 +1,42 @@
+[
+  {
+    "id": "lb_001",
+    "question": "Based on the provided document, what are the three main conclusions about the impact of climate change on agricultural productivity in Southeast Asia between 2000 and 2020? Summarize each in one sentence.",
+    "context_length": "8K",
+    "document_hint": "This is a placeholder. In production, a full document would be provided.",
+    "expected_type": "summary",
+    "category": "long_context"
+  },
+  {
+    "id": "lb_002",
+    "question": "In the 47th paragraph of the document, what specific numerical claim is made about renewable energy adoption rates?",
+    "context_length": "32K",
+    "document_hint": "This is a placeholder. In production, a full document would be provided.",
+    "expected_type": "extraction",
+    "category": "needle_in_haystack"
+  },
+  {
+    "id": "lb_003",
+    "question": "Compare and contrast the arguments presented in Section 2 and Section 5 of the provided research paper. Which section provides stronger empirical evidence?",
+    "context_length": "64K",
+    "document_hint": "This is a placeholder. In production, a full document would be provided.",
+    "expected_type": "comparison",
+    "category": "long_context"
+  },
+  {
+    "id": "lb_004",
+    "question": "Identify all instances where the author contradicts their earlier claims in the document. Quote the relevant passages.",
+    "context_length": "128K",
+    "document_hint": "This is a placeholder. In production, a full document would be provided.",
+    "expected_type": "analysis",
+    "category": "long_context"
+  },
+  {
+    "id": "lb_005",
+    "question": "The document discusses multiple case studies. Extract the key metrics from each case study and present them in a structured table format.",
+    "context_length": "64K",
+    "document_hint": "This is a placeholder. In production, a full document would be provided.",
+    "expected_type": "extraction",
+    "category": "structured_extraction"
+  }
+]

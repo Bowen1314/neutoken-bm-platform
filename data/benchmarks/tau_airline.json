@@ -1,0 +1,67 @@
+[
+  {
+    "id": "tau_airline_001",
+    "scenario": "airline",
+    "user_message": "I need to change my flight from NYC to LAX on March 15 to March 18. Booking ref: AL-90234.",
+    "available_tools": [
+      {"name": "get_booking", "params": {"booking_ref": "string"}},
+      {"name": "search_flights", "params": {"origin": "string", "destination": "string", "date": "string"}},
+      {"name": "change_flight", "params": {"booking_ref": "string", "new_flight_id": "string"}}
+    ],
+    "expected_tool_call": "get_booking",
+    "expected_tool_args": {"booking_ref": "AL-90234"},
+    "category": "tool_use"
+  },
+  {
+    "id": "tau_airline_002",
+    "scenario": "airline",
+    "user_message": "Check my frequent flyer miles balance and tell me how many more miles I need for a free domestic flight",
+    "available_tools": [
+      {"name": "get_miles_balance", "params": {"member_id": "string"}},
+      {"name": "get_reward_thresholds", "params": {"category": "string"}},
+      {"name": "search_award_flights", "params": {"origin": "string", "destination": "string"}}
+    ],
+    "expected_tool_call": "get_miles_balance",
+    "expected_tool_args": {},
+    "category": "multi_tool"
+  },
+  {
+    "id": "tau_airline_003",
+    "scenario": "airline",
+    "user_message": "My flight was cancelled. I need rebooking on the next available flight and hotel accommodation",
+    "available_tools": [
+      {"name": "check_cancellations", "params": {"flight_number": "string", "date": "string"}},
+      {"name": "search_alternative_flights", "params": {"origin": "string", "destination": "string", "date": "string"}},
+      {"name": "book_hotel", "params": {"airport_code": "string", "nights": "number"}}
+    ],
+    "expected_tool_call": "check_cancellations",
+    "expected_tool_args": {},
+    "category": "multi_tool"
+  },
+  {
+    "id": "tau_airline_004",
+    "scenario": "airline",
+    "user_message": "Add my pet cat to my booking AL-44521 for the flight to Seattle",
+    "available_tools": [
+      {"name": "get_booking", "params": {"booking_ref": "string"}},
+      {"name": "add_pet_cargo", "params": {"booking_ref": "string", "pet_type": "string", "weight": "number"}},
+      {"name": "check_pet_policy", "params": {"route": "string"}}
+    ],
+    "expected_tool_call": "get_booking",
+    "expected_tool_args": {"booking_ref": "AL-44521"},
+    "category": "tool_use"
+  },
+  {
+    "id": "tau_airline_005",
+    "scenario": "airline",
+    "user_message": "I want to upgrade to business class for my upcoming flight and use my credit card on file",
+    "available_tools": [
+      {"name": "get_booking", "params": {"booking_ref": "string"}},
+      {"name": "check_upgrade_availability", "params": {"flight_id": "string", "cabin": "string"}},
+      {"name": "process_upgrade", "params": {"booking_ref": "string", "cabin": "string", "payment_method": "string"}}
+    ],
+    "expected_tool_call": "get_booking",
+    "expected_tool_args": {},
+    "category": "multi_tool"
+  }
+]

@@ -1,0 +1,62 @@
+[
+  {
+    "id": "simpleqa_001",
+    "question": "What is the capital city of Australia?",
+    "answer": "Canberra",
+    "category": "geography"
+  },
+  {
+    "id": "simpleqa_002",
+    "question": "Who wrote the novel 'One Hundred Years of Solitude'?",
+    "answer": "Gabriel García Márquez",
+    "category": "literature"
+  },
+  {
+    "id": "simpleqa_003",
+    "question": "What is the chemical formula for sodium bicarbonate?",
+    "answer": "NaHCO3",
+    "category": "chemistry"
+  },
+  {
+    "id": "simpleqa_004",
+    "question": "In what year did the Berlin Wall fall?",
+    "answer": "1989",
+    "category": "history"
+  },
+  {
+    "id": "simpleqa_005",
+    "question": "What is the speed of light in a vacuum, in meters per second?",
+    "answer": "299792458",
+    "category": "physics"
+  },
+  {
+    "id": "simpleqa_006",
+    "question": "Who painted 'The Starry Night'?",
+    "answer": "Vincent van Gogh",
+    "category": "art"
+  },
+  {
+    "id": "simpleqa_007",
+    "question": "What is the largest organ in the human body?",
+    "answer": "Skin",
+    "category": "biology"
+  },
+  {
+    "id": "simpleqa_008",
+    "question": "What is the boiling point of water at standard atmospheric pressure in Celsius?",
+    "answer": "100",
+    "category": "science"
+  },
+  {
+    "id": "simpleqa_009",
+    "question": "Who is the author of 'The Art of War'?",
+    "answer": "Sun Tzu",
+    "category": "literature"
+  },
+  {
+    "id": "simpleqa_010",
+    "question": "What is the smallest prime number greater than 100?",
+    "answer": "101",
+    "category": "mathematics"
+  }
+]
