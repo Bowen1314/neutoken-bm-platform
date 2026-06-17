@@ -1245,22 +1245,16 @@
             }
             
             // Initial fetch
-            fetchTestStatusAndUpdateDrawer(testId).then(() => {
-                // Find if test is running
-                let isRunning = false;
-                for (const suite of appState.suites) {
-                    const t = suite.tests.find(x => x.id === testId);
-                    if (t && t.status === 'running') {
-                        isRunning = true;
-                        break;
+            fetchTestStatusAndUpdateDrawer(testId).then((data) => {
+                // If the test is running or pending, start the log polling interval
+                if (data && (data.status === 'running' || data.status === 'pending')) {
+                    if (!appState.drawerInterval) {
+                        appState.drawerInterval = setInterval(() => {
+                            if (appState.currentDrawerTestId === testId) {
+                                fetchTestStatusAndUpdateDrawer(testId);
+                            }
+                        }, 2000);
                     }
-                }
-                
-                // If running, poll logs every 2 seconds
-                if (isRunning) {
-                    appState.drawerInterval = setInterval(() => {
-                        fetchTestStatusAndUpdateDrawer(testId);
-                    }, 2000);
                 }
             });
         }
@@ -1278,15 +1272,17 @@
         async function fetchTestStatusAndUpdateDrawer(testId) {
             try {
                 const res = await fetch(`${API_BASE}/api/tests/${testId}/status`);
-                if (!res.ok) return;
+                if (!res.ok) return null;
                 const data = await res.json();
                 
                 // If it is still open, update terminal and metrics
                 if (appState.currentDrawerTestId === testId) {
                     updateDrawerUI(testId, data);
                 }
+                return data;
             } catch (e) {
                 console.error("Error fetching test details", e);
+                return null;
             }
         }
 
@@ -1648,7 +1644,17 @@
 
         function updateTestProgress(testId, data) {
             if (appState.currentDrawerTestId === testId) {
-                if (data.status === 'passed' || data.status === 'failed') {
+                if (data.status === 'running') {
+                    fetchTestStatusAndUpdateDrawer(testId);
+                    // Ensure polling interval is running when transitioning to/remaining in running state
+                    if (!appState.drawerInterval) {
+                        appState.drawerInterval = setInterval(() => {
+                            if (appState.currentDrawerTestId === testId) {
+                                fetchTestStatusAndUpdateDrawer(testId);
+                            }
+                        }, 2000);
+                    }
+                } else if (data.status === 'passed' || data.status === 'failed' || data.status === 'warning') {
                     fetchTestStatusAndUpdateDrawer(testId);
                     if (appState.drawerInterval) {
                         clearInterval(appState.drawerInterval);
