@@ -1600,7 +1600,8 @@
         }
 
         async function exportResults() {
-            window.open(`${API_BASE}/api/export`, '_blank');
+            const pwd = encodeURIComponent(localStorage.getItem('access_password') || '');
+            window.open(`${API_BASE}/api/export?password=${pwd}`, '_blank');
         }
 
         function refreshAll() {
