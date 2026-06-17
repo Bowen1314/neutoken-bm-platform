@@ -36,52 +36,96 @@
 
 ## 🎯 精度验收测试 (Accuracy Benchmarks) 额外依赖安装指南
 
-平台中的精度验收测试套件包含 9 个主流基准测试。若要运行这些精度评测，除了安装核心库外，还需要根据具体测试项安装以下依赖并配置运行环境：
+本平台集成了 `evalscope` 评测框架以运行 9 个主流基准测试（如 AIME2025、HLE、SWE-Bench、TAU-Bench 等）。由于不同的基准测试涉及不同的测试环境（如沙箱容器、第三方库等），为了方便开发者从 GitHub 克隆后一键配置，请参考以下详尽的安装与配置指南：
 
-### 1. SWE-bench 系列测试 (代码修复评测)
+### 💡 极速环境配置清单 (环境配置命令汇总)
+
+建议在开始之前，配置 Python 虚拟环境以隔离依赖：
+```bash
+# 1. 创建并激活虚拟环境 (推荐)
+python3 -m venv .venv
+source .venv/bin/activate
+
+# 2. 升级 pip 并安装平台核心依赖 + 精度验收基础依赖
+pip install --upgrade pip
+pip install -r requirements.txt
+
+# 3. 安装 TAU-bench 专属评测库 (Sierra Research 官方)
+pip install git+https://github.com/sierra-research/tau-bench.git
+```
+
+---
+
+### 🛠️ 各精度评测专项环境要求
+
+#### 1. SWE-bench Verified 系列测试 (代码修复评测)
 *   **虚拟化环境 (Docker)**：必须已安装并运行 Docker 守护进程（Daemon）。底层评测引擎（基于 `evalscope` / `SWE-bench` Harness）会自动调用 Docker API 创建沙箱容器，拉取测试环境镜像并在容器内对目标软件仓库应用补丁并运行集成测试。
     *   **Docker 权限配置**：确保运行测试的非 root 用户已被加入 `docker` 用户组，无需 `sudo` 即可运行 `docker` 命令：
         ```bash
         sudo usermod -aG docker $USER
         # 重启终端或注销重新登录以生效
         ```
-*   **Python 依赖库**：
-    ```bash
-    pip install docker>=7.0.0
-    pip install swebench==4.1.0
-    ```
+    *   **Linux Docker 极速安装**：
+        ```bash
+        curl -fsSL https://get.docker.com | bash
+        sudo systemctl enable --now docker
+        ```
+*   **Python 依赖库**：核心依赖库 `docker>=7.0.0` 和 `swebench==4.1.0` 已经包含在 `requirements.txt` 中，执行安装时会自动安装。
     *注意：EvalScope 精度评测中需要精确绑定 `swebench==4.1.0` 版本，请勿安装其他版本。*
-*   **网络连通性与镜像拉取**：评测过程中会自动从 Docker Hub 拉取测试环境镜像（如 `swebench/eval-verified` 等）。若服务器在国内或处于无公网环境：
-    1. 需配置 Docker 国内加速镜像源或使用代理。
-    2. 或预先在有网环境拉取所需的基础镜像，通过 `docker save` 和 `docker load` 导入到测试机中。
+*   **MonkeyPatch 优化：本地 Docker 缓存增量过滤**：
+    由于 SWE-bench Verified 包含大量样本，完整下载全部测试环境镜像（如 `swebench/eval-verified` 的各种分支镜像）会消耗数十GB甚至上百GB的网络流量和磁盘空间。
+    - **机制**：本平台已在 `test_accuracy.py` 中实现了 MonkeyPatch，**会自动检测您本地已拉取的 Docker 镜像缓存**，并自动**只测试本地已下载对应镜像的 sample**。
+    - **预下载特定样本**：如果您想运行特定的测试样本，请提前拉取对应的 Docker 镜像。例如：
+      ```bash
+      docker pull swebench/sweb.eval.x86_64.sympy__sympy-13471:latest
+      ```
+      拉取后，平台启动该测试时即会自动将对应的 `sympy__sympy-13471` 样本纳入评测。
+*   **国内网络与代理设置**：
+    若服务器在国内或处于无公网环境，评测过程中拉取 Docker Hub 镜像可能失败或极慢。
+    1. 需配置 Docker 国内加速镜像源（编辑 `/etc/docker/daemon.json` 后重启 Docker）。
+    2. 或在有网环境拉取镜像后通过 `docker save` 和 `docker load` 导入到测试机中。
 
-### 2. TAU-bench 系列测试 (Agent工具调用评测)
-*   **Python 依赖库**：需要安装 Sierra Research 官方的 `tau-bench` 库。您可以通过 Git 链接直接安装：
+#### 2. TAU-bench 系列测试 (Agent工具调用与 Function Calling 评测)
+*   **Python 专属库**：需要安装 Sierra Research 官方的 `tau-bench` 库。您可以通过 Git 链接直接在线安装：
     ```bash
     pip install git+https://github.com/sierra-research/tau-bench.git
     ```
     或者克隆到本地后进行可编辑模式安装：
     ```bash
     git clone https://github.com/sierra-research/tau-bench.git
-    cd tau-bench
+    cd /path/to/tau-bench
     pip install -e .
     ```
-*   **模型功能要求**：TAU-bench 主要测试模型的多轮工具调用（Function Calling）能力，需确保在网页端或配置文件中配置的被测模型端点支持并开启了工具调用功能，且配置了有效的 `api_key`。
+*   **评测配置与模型要求**：
+    - **多轮工具调用**：TAU-bench 主要测试模型在模拟环境（Retail/Airline/Telecom）下的多轮 Tool Calling 能力。必须确保您绑定的 API 端点**支持并启用了 Function Calling 功能**。
+    - **温度设定**：平台会强制将评测的 `temperature` 设置为 `1.0`，以符合官方对于思维发散度与工具选择概率的评测标准。
 
-### 3. HLE (Humanity's Last Exam) 全学科多模态评测
-*   **HLE 评测裁判设置**：HLE 基准使用模型本身（或配置中指定的评测模型）作为裁判（Judge Model）进行打分。因此，需确保 API 账户有足够的额度与并发能力，且当前测试模型能够正常响应打分请求。
-*   **网络要求**：评测过程中依赖 EvalScope 自动从 ModelScope (魔搭社区) 下载 HLE 评测数据集。若连接魔搭社区较慢，可设置本地缓存目录：
+#### 3. HLE (Humanity's Last Exam) 全学科多模态评测
+*   **HLE 评测裁判设置**：HLE 基准在计算准确率时，需要使用裁判模型（Judge Model）对被测模型的长文本回答进行打分和一致性校对。
+    - **默认机制**：平台默认将**当前被测模型自身**作为 HLE 裁判模型。
+    - 若要更换裁判模型（如使用 `gpt-4o` 以提升裁判标准的一致性），您可以在 `test_accuracy.py` 中的 `judge_model_args` 内修改裁判模型名称与对应凭证。
+*   **网络与数据集缓存**：
+    评测过程中依赖 EvalScope 自动从 ModelScope (魔搭社区) 下载 HLE 评测数据集。若连接魔搭社区较慢，可提前在环境变量中设置本地缓存目录：
     ```bash
     export MODELSCOPE_CACHE="/path/to/cache"
     ```
 
-### 4. 其他精度基准 (AIME2025/2026, GPQA Diamond, LongBench V2)
-*   **依赖安装**：仅需安装基础框架中的 `evalscope`。
-*   **数据集来源**：
+#### 4. 其他精度基准 (AIME2025/2026, GPQA Diamond, LongBench V2)
+*   **依赖安装**：仅需安装基础框架中的 `evalscope`（在 `requirements.txt` 中已声明）。
+*   **数据源自动拉取**：
     *   **GPQA Diamond**：自动从魔搭社区加载 `AI-ModelScope/gpqa_diamond` 仓库。
     *   **AIME2025/AIME2026**：通过 `evalscope` 内置的数据集加载器进行本地或云端加载。
     *   **LongBench V2**：长上下文理解评测，使用内置适配器拉取。
-*   请确保服务器能够正常连接网络以进行首次评测数据集的自动下载（国内服务器魔搭社区下载免翻墙，速度较快）。
+*   请确保服务器网络正常以支持首次评测数据集的自动下载（国内服务器连接魔搭社区免翻墙且下载速度极快）。
+
+#### 💡 评测数量限制 (EVALSCOPE_LIMIT)
+为了方便进行快速部署验证，平台支持通过 `EVALSCOPE_LIMIT` 环境变量限制每个测试集运行的样本数量：
+- **快速验证（执行 1 个样本）**：
+  ```bash
+  export EVALSCOPE_LIMIT=1
+  # 或直接在启动命令前加：EVALSCOPE_LIMIT=1 ./start.sh
+  ```
+- **完整评测**：不设置该环境变量即可（默认将运行该测试集内的全部样本）。
 
 ---
 
