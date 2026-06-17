@@ -4,3 +4,7 @@ openpyxl>=3.1.0
 requests>=2.31.0
 openai
 evalscope
+
+# 精度验收 (Accuracy Benchmarks) 额外依赖
+docker>=7.0.0
+swebench==4.1.0

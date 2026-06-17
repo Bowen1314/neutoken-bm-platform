@@ -31,8 +31,57 @@
   - `Flask` (Web 框架)
   - `Flask-CORS` (解决跨域开发问题)
   - `urllib3` (用于后台进行 API 联通性测试)
-- **虚拟化环境（可选）**：
-  - **Docker**：如果需要执行代码精度评测（特别是 **SWE-bench** 系列测试），服务器必须已安装并运行 Docker 守护进程（Daemon）。底层评测引擎（基于 `evalscope` / `SWE-bench` Harness）会自动调用 Docker API 创建沙箱容器，拉取测试环境镜像，并在容器内对目标开源软件仓库应用补丁并运行集成测试。如果您只执行 API 吞吐性能测试 (TTFT/OTPS) 或基础可用性校验，则无需安装 Docker。
+
+---
+
+## 🎯 精度验收测试 (Accuracy Benchmarks) 额外依赖安装指南
+
+平台中的精度验收测试套件包含 9 个主流基准测试。若要运行这些精度评测，除了安装核心库外，还需要根据具体测试项安装以下依赖并配置运行环境：
+
+### 1. SWE-bench 系列测试 (代码修复评测)
+*   **虚拟化环境 (Docker)**：必须已安装并运行 Docker 守护进程（Daemon）。底层评测引擎（基于 `evalscope` / `SWE-bench` Harness）会自动调用 Docker API 创建沙箱容器，拉取测试环境镜像并在容器内对目标软件仓库应用补丁并运行集成测试。
+    *   **Docker 权限配置**：确保运行测试的非 root 用户已被加入 `docker` 用户组，无需 `sudo` 即可运行 `docker` 命令：
+        ```bash
+        sudo usermod -aG docker $USER
+        # 重启终端或注销重新登录以生效
+        ```
+*   **Python 依赖库**：
+    ```bash
+    pip install docker>=7.0.0
+    pip install swebench==4.1.0
+    ```
+    *注意：EvalScope 精度评测中需要精确绑定 `swebench==4.1.0` 版本，请勿安装其他版本。*
+*   **网络连通性与镜像拉取**：评测过程中会自动从 Docker Hub 拉取测试环境镜像（如 `swebench/eval-verified` 等）。若服务器在国内或处于无公网环境：
+    1. 需配置 Docker 国内加速镜像源或使用代理。
+    2. 或预先在有网环境拉取所需的基础镜像，通过 `docker save` 和 `docker load` 导入到测试机中。
+
+### 2. TAU-bench 系列测试 (Agent工具调用评测)
+*   **Python 依赖库**：需要安装 Sierra Research 官方的 `tau-bench` 库。您可以通过 Git 链接直接安装：
+    ```bash
+    pip install git+https://github.com/sierra-research/tau-bench.git
+    ```
+    或者克隆到本地后进行可编辑模式安装：
+    ```bash
+    git clone https://github.com/sierra-research/tau-bench.git
+    cd tau-bench
+    pip install -e .
+    ```
+*   **模型功能要求**：TAU-bench 主要测试模型的多轮工具调用（Function Calling）能力，需确保在网页端或配置文件中配置的被测模型端点支持并开启了工具调用功能，且配置了有效的 `api_key`。
+
+### 3. HLE (Humanity's Last Exam) 全学科多模态评测
+*   **HLE 评测裁判设置**：HLE 基准使用模型本身（或配置中指定的评测模型）作为裁判（Judge Model）进行打分。因此，需确保 API 账户有足够的额度与并发能力，且当前测试模型能够正常响应打分请求。
+*   **网络要求**：评测过程中依赖 EvalScope 自动从 ModelScope (魔搭社区) 下载 HLE 评测数据集。若连接魔搭社区较慢，可设置本地缓存目录：
+    ```bash
+    export MODELSCOPE_CACHE="/path/to/cache"
+    ```
+
+### 4. 其他精度基准 (AIME2025/2026, GPQA Diamond, LongBench V2)
+*   **依赖安装**：仅需安装基础框架中的 `evalscope`。
+*   **数据集来源**：
+    *   **GPQA Diamond**：自动从魔搭社区加载 `AI-ModelScope/gpqa_diamond` 仓库。
+    *   **AIME2025/AIME2026**：通过 `evalscope` 内置的数据集加载器进行本地或云端加载。
+    *   **LongBench V2**：长上下文理解评测，使用内置适配器拉取。
+*   请确保服务器能够正常连接网络以进行首次评测数据集的自动下载（国内服务器魔搭社区下载免翻墙，速度较快）。
 
 ---
 
