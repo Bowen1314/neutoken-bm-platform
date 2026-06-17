@@ -33,20 +33,36 @@ _TIMEOUT_EXECUTOR = concurrent.futures.ThreadPoolExecutor(max_workers=50, thread
 if not getattr(Completions, "_is_wall_clock_patched", False):
     original_create = Completions.create
     
+    import functools
+    @functools.wraps(original_create)
     def patched_create(self, *args, **kwargs):
         timeout = kwargs.get("timeout")
         stream = kwargs.get("stream", False)
         
-        # Enforce absolute wall-clock timeout only for non-streaming requests
-        if not stream and isinstance(timeout, (int, float)) and timeout > 0:
-            future = _TIMEOUT_EXECUTOR.submit(original_create, self, *args, **kwargs)
-            try:
-                return future.result(timeout=timeout)
-            except concurrent.futures.TimeoutError:
-                logger.error(f"Request timed out (enforced absolute wall-clock timeout of {timeout}s)")
-                raise openai.APITimeoutError("Request timed out (enforced absolute wall-clock timeout)")
-        else:
-            return original_create(self, *args, **kwargs)
+        try:
+            # Enforce absolute wall-clock timeout only for non-streaming requests
+            if not stream and isinstance(timeout, (int, float)) and timeout > 0:
+                future = _TIMEOUT_EXECUTOR.submit(original_create, self, *args, **kwargs)
+                try:
+                    return future.result(timeout=timeout)
+                except concurrent.futures.TimeoutError:
+                    logger.error(f"Request timed out (enforced absolute wall-clock timeout of {timeout}s)")
+                    raise openai.APITimeoutError("Request timed out (enforced absolute wall-clock timeout)")
+            else:
+                return original_create(self, *args, **kwargs)
+        except TypeError as e:
+            import sys
+            tb = e.__traceback__
+            local_vars = {}
+            while tb:
+                if "openai/_utils/_utils.py" in tb.tb_frame.f_code.co_filename:
+                    # Capture local variables inside the wrapper function
+                    for k, v in tb.tb_frame.f_locals.items():
+                        if k in ["given_params", "variants", "args", "kwargs", "positional"]:
+                            local_vars[k] = str(v)
+                tb = tb.tb_next
+            logger.error(f"TypeError in patched_create! args={args}, kwargs={kwargs}, local_vars={local_vars}")
+            raise e
             
     Completions.create = patched_create
     Completions._is_wall_clock_patched = True
